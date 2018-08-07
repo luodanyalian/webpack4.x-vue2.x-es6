@@ -75,13 +75,13 @@ module.exports = {
 		new MiniCssExtractPlugin({
 	      filename: 'style.css'//压缩冗余代码
 	    }),
-	    new PurifyCSSPlugin({
-	    	//消除冗余代码
-	        // 首先保证找路径不是异步的,所以这里用同步的方法
-	        // path.join()也是path里面的方法,主要用来合并路径的
-	        // 'src/*.html' 表示扫描每个html的css
-	        paths: glob.sync(path.join(__dirname, '../src/*.html')),
-	    }),
+	    // new PurifyCSSPlugin({
+	    // 	//消除冗余代码
+	    //     // 首先保证找路径不是异步的,所以这里用同步的方法
+	    //     // path.join()也是path里面的方法,主要用来合并路径的
+	    //     // 'src/*.html' 表示扫描每个html的css
+	    //     paths: glob.sync(path.join(__dirname, '../src/*.html')),
+	    // }),
         new VueLoaderPlugin(),
         new uglify(),
         new htmlPlugin({
