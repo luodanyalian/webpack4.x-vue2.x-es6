@@ -10,15 +10,32 @@ const glob = require('glob')
 const path = require('path')
 
 module.exports = {
+    optimization: {
+        splitChunks: {
+          cacheGroups: {
+            commons: {
+              chunks: 'initial',
+              minChunks: 2,
+              maxInitialRequests: 5, // The default limit is too small to showcase the effect
+              minSize: 0, // This is example is too small to create commons chunks
+              name: 'common'
+            }
+          }
+        }
+    },
     mode: "development",
     entry: {
         main: path.join(__dirname, '../src/index.js'),
     },
     output: {
-        filename: '[name].js',
+        filename: 'js/[name].js',
         path: path.join(__dirname, '../dist')
     },
-    resolve: { //导入的时候不用写拓展名
+    resolve: {
+        alias: {
+            'vue': 'vue/dist/vue.js'
+        },
+         //导入的时候不用写拓展名
         extensions: [' ', '.js', '.json', '.vue', '.scss', '.css']
     },
     module: {
@@ -33,6 +50,7 @@ module.exports = {
             {
                 test: /\.css$/,
                 use: [
+                    'css-hot-loader',
                 	{
 			            loader: MiniCssExtractPlugin.loader,
 			            options: {
@@ -47,6 +65,7 @@ module.exports = {
             {
                 test: /\.scss$/,
                 use: [
+                    'css-hot-loader',
                 	{
 			            loader: MiniCssExtractPlugin.loader,
 			            options: {
@@ -74,16 +93,6 @@ module.exports = {
     plugins: [
         new Webpack.HotModuleReplacementPlugin(), //调用webpack的热更新插件
         new CleanWebpackPlugin(['dist']), //传入数组,指定要删除的目录
-        new MiniCssExtractPlugin({
-	      filename: 'style.css'
-	    }),
-	    // new PurifyCSSPlugin({
-	    // 	//消除冗余代码
-	    //     // 首先保证找路径不是异步的,所以这里用同步的方法
-	    //     // path.join()也是path里面的方法,主要用来合并路径的
-	    //     // 'src/*.html' 表示扫描每个html的css
-	    //     paths: glob.sync(path.join(__dirname, '../src/*.html')),
-	    // }),
         new VueLoaderPlugin(),
         new uglify(),
         new htmlPlugin({
@@ -93,7 +102,17 @@ module.exports = {
             title: 'webpack4.x+vue2.x+es6',
             hash: true, //为了开发中js有缓存效果，所以加入hash，这样可以有效避免缓存JS。
             template: './src/index.html' //是要打包的html模版路径和文件名称。
-        })
+        }),
+        new MiniCssExtractPlugin({
+          filename: 'css/[name].css'
+        }),
+        // new PurifyCSSPlugin({
+        //     //消除冗余代码
+        //     // 首先保证找路径不是异步的,所以这里用同步的方法
+        //     // path.join()也是path里面的方法,主要用来合并路径的
+        //     // 'src/*.html' 表示扫描每个html的css
+        //     paths: glob.sync(path.join(__dirname, '../src/*.html')),
+        // })
     ],
     watchOptions: {
         ignored: /node_modules/,

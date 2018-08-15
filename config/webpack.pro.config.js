@@ -11,13 +11,16 @@ const path = require('path')
 module.exports = {
 	mode: "production",
 	entry: {
-		main: path.join(__dirname, '../src/index.js'),
-	},
-	output: {
-	  filename: 'bundle.js',
-	  path: path.join(__dirname, '../dist')
-	},
+        main: path.join(__dirname, '../src/index.js'),
+    },
+    output: {
+        filename: 'js/[name].js',
+        path: path.join(__dirname, '../dist')
+    },
 	resolve: { //导入的时候不用写拓展名
+        alias: {
+            'vue': 'vue/dist/vue.js'
+        },
 		extensions: [' ', '.js', '.json', '.vue', '.scss', '.css']
 	},
 	module: {
@@ -73,7 +76,7 @@ module.exports = {
 	plugins: [
 		new CleanWebpackPlugin(['dist']), //传入数组,指定要删除的目录
 		new MiniCssExtractPlugin({
-	      filename: 'style.css'//压缩冗余代码
+	      filename: 'css/[name].css'//压缩冗余代码
 	    }),
 	    // new PurifyCSSPlugin({
 	    // 	//消除冗余代码
